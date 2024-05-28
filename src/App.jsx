@@ -1,11 +1,13 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import back from './assets/back-icon.png'
 import next from './assets/next-icon.png'
 import user1 from './assets/user-1.png'
 import user2 from './assets/user-2.png'
 import user3 from './assets/user-3.png'
 import user4 from './assets/user-4.png'
+import React from "react";
 function App() {
+
   const slider = useRef();
   let tx = 0;
   const nextSlide = () => {
@@ -21,6 +23,32 @@ function App() {
 
 
   }
+  // fromsubmit 
+  
+  const [result, setResult] = React.useState("");
+
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    setResult("Sending....");
+    const formData = new FormData(event.target);
+
+    formData.append("access_key", "8ea6e567-84bc-4799-9888-8e4977ce605e");
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setResult("Form Submitted Successfully");
+      event.target.reset();
+    } else {
+      console.log("Error", data);
+      setResult(data.message);
+    }
+  };
   return (
 
     <>
@@ -110,7 +138,32 @@ function App() {
 
 
       </div>
+    <div className="w-[1170px] mx-auto">
 
+      <form className='flex justify-center flex-col' onSubmit={onSubmit} >
+      <label > Your name</label> 
+      <input  className='border  w-[200px]'  type="text" name='name' placeholder='enter uour name' required />
+      <label > Your number</label>
+      <input className='border   w-[200px] ' type="number"  name="number" />
+      <label > textariya</label>
+      <textarea name="massage" rows={6}  className='border  w-[200px]' placeholder='enter your commont' ></textarea>
+      <button type='submit' className='ml-[-1100px]'>submit</button>
+      </form>
+      <span>{ result}</span>
+      {/* jj */}
+      {/* <div>
+      <form onSubmit={onSubmit}>
+        <input type="text" name="name" required/>
+        <input type="email" name="email" required/>
+        <textarea name="message" required></textarea>
+
+        <button type="submit">Submit Form</button>
+
+      </form>
+      <span>{result}</span>
+
+    </div> */}
+    </div>
 
 
 
